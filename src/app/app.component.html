@@ -1,20 +1,86 @@
 <!--The content below is only a placeholder and can be replaced.-->
-<div style="text-align:center">
-  <h1>
-    Welcome to {{ title }}!
-  </h1>
-  <img width="300" alt="Angular Logo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg==">
-</div>
-<h2>Here are some links to help you start: </h2>
-<ul>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://angular.io/tutorial">Tour of Heroes</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://github.com/angular/angular-cli/wiki">CLI Documentation</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://blog.angular.io/">Angular blog</a></h2>
-  </li>
-</ul>
+<div class="container">
+    <h2>User Form</h2>
+<form [formGroup]="userForm" (ngSubmit)="add_user()">
+    <div class="form-group">
+        <label for="email">Email:</label>
+        <input type="email" class="form-control" formControlName="email" id="email" placeholder="Enter email" name="email">
+        <div *ngIf="userForm.controls['email'].errors && !userForm.controls['email'].pristine" class="error-msg">
+          <div [hidden]="!userForm.controls['email'].errors.required">Email is required.</div>
+          <div [hidden]="!userForm.controls['email'].errors.email">Email must be valid.</div>
+        </div>
+      </div>
+  <div class="form-group">
+    <label for="firstname"> First Name: </label>
+      <input type="text" formControlName="firstName" id="firstname" placeholder="Enter First Name" class="form-control">
+      <div *ngIf="userForm.controls['firstName'].errors && !userForm.controls['firstName'].pristine" class="error-msg">
+        <div [hidden]="!userForm.controls['firstName'].errors.required">First Name is required.</div>
+        <div [hidden]="!userForm.controls['firstName'].errors.minlength">First Name must be more than 5 characters.</div>
+      </div>
+  </div>
+  <div class="form-group">
+    <label for="lastname"> Last Name:</label>
+      <input type="text" formControlName="lastName" id="lastname"  placeholder="Enter Last Name" class="form-control">
+      <div *ngIf="userForm.controls['lastName'].errors && !userForm.controls['lastName'].pristine" class="error-msg">
+        <div [hidden]="!userForm.controls['lastName'].errors.required">Last Name is required.</div>
+      </div>
+  </div>
+  
+  
+  <div>
+    <h3>Address</h3>
+    <div class="form-group">
+      <label for="street"> Street:</label>
+        <input type="text" formControlName="street" id="street"  placeholder="Enter Street" class="form-control">
+        <div *ngIf="userForm.controls['street'].errors && !userForm.controls['street'].pristine" class="error-msg">
+          <div [hidden]="!userForm.controls['street'].errors.required">Street is required.</div>
+        </div>
+    </div>
+    <div class="form-group">
+      <label for="city"> City: </label>
+        <input type="text" formControlName="city" id="city"  placeholder="Enter City" class="form-control">
+        <div *ngIf="userForm.controls['city'].errors && !userForm.controls['city'].pristine" class="error-msg">
+          <div [hidden]="!userForm.controls['city'].errors.required">City is required.</div>
+        </div>
+    </div>
+    <div class="form-group">
+      <label for="state"> State: </label>
+        <input type="text" formControlName="state" id="state"  placeholder="Enter State" class="form-control">
+        <div *ngIf="userForm.controls['state'].errors && !userForm.controls['state'].pristine" class="error-msg">
+          <div [hidden]="!userForm.controls['state'].errors.required">State is required.</div>
+        </div>
+    </div>
+    <div class="form-group">
+      <label for="zip"> Zip Code: </label>
+        <input type="text" formControlName="zip" id="zip"  placeholder="Enter Zip Code" class="form-control">
+        <div *ngIf="userForm.controls['zip'].errors && !userForm.controls['zip'].pristine" class="error-msg">
+          <div [hidden]="!userForm.controls['zip'].errors.required">Zip is required.</div>
+        </div>
+    </div>
+  </div>
+  <div class="row" style="border: 1px ridge;">
+    <div formArrayName="image_uploads">
+      <div class="row" style="padding: 12px;" *ngFor="let item of imagesList.controls; let pointIndex=index" [formGroupName]="pointIndex">
+        <div class="col-md-10" style="margin-left: -16px;">
+          <input (change)="changeListener($event.target.files,pointIndex)" formControlName="image_point" class="dropify form-control" type="file"
+                 accept=".png, .jpg, .jpeg"
+                 data-allowed-file-extensions="jpg png jpeg"
+                 data-show-loader="true"
+                 data-max-file-size="5M" data-height="110">
+        </div>
+        <div *ngIf="showDelButton" class="col-md-2">
+          <a><button type="button" class="btn btn-primary" (click)="deleteImage(pointIndex)"><b>Delete</b></button></a>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12" style="padding-left: 12px;padding-top: 10px; padding-bottom: 10px;">
+      <button type="button" class="btn btn-primary" (click)="addImage()"><b>Add More</b></button>
+    </div>
+  </div>
+  <p>
+    Form Status: {{ userForm.value | json }}
+  </p>
 
+  <input type="submit" [disabled]="!userForm.valid" value="Submit"> 
+</form>
+</div>
